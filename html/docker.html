@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<body>
+	<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<style type="text/css">
+	@media (min-width: 1200px) {
+    .container{
+        max-width: 700px;
+    }
+}
+</style>
+<form name="envirment" id="envirment" method="POST">
+<div class="container">
+	<div class="form-group">
+		<label for="version">版本</label>
+			<input name="version" id="Version" class="form-control" placeholder="版本">
+		<label for="images">镜像</label>
+			<select id="languages" name="languages" onchange="getStationName()" class="form-control">
+				<option value="0">环境</option>
+			</select>
+			<select id="lan_versions" name="lan_versions" class="form-control">
+				<option value="0">版本</option>
+			</select>
+		<label for="docker">项目名（容器实例名）</label>
+				<input name="docker" id="Docker" class="form-control" placeholder="项目名称">
+			
+	</div>
+</form>
+	<button type="submit" class="btn btn-primary" onclick="submit_form()" >Submit</button>
+</div>
+
+
+</body>
+<script type="text/javascript">
+var Language = ["python", "java","go"];
+var doc = document.getElementById("languages")
+var old = doc.innerHTML
+function load() {
+    var lineNu = "";
+    for (var j = 0; j < Language.length; j++) {
+        lineNu += '<option>' + Language[j] + '</option>';
+    }
+    doc.innerHTML = old + lineNu;
+} //网页加载时执行此函数，为线路选择框动态添加选项      
+load();  
+var stationName = [
+    ["2.7", "2.8.5", "3.6"],
+    ["6","7", "8"]
+];
+ 
+function getStationName() {
+    var lang = document.envirment.languages;
+    var version = document.envirment.lan_versions;
+	console.log(lang.selectedIndex)
+    var language_version = stationName[lang.selectedIndex - 1];
+    version.length = 1;
+    for (var i = 0; i < language_version.length; i++) {
+        version[i + 1] = new Option(language_version[i], language_version[i]);
+    }
+} 
+function submit_form() {
+	var version = $("#Version").val() 
+	var lan = $("#languages").val()
+	var lan_versions = $("#lan_versions").val()
+	var pname = $("#Docker").val()
+	var json = {
+	'version': version,
+	'services' : {
+		pname : {
+			'image' : pname
+			}
+		}
+	}
+	return json
+}
+	
+</script>
+</html>
